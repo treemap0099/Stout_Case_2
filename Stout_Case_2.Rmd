@@ -1,0 +1,90 @@
+---
+title: "Stout_Case_2"
+author: "Chengyan Ji"
+date: "2021/11/2"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+df = read.csv('C:/Users/kurtji/Desktop/Interviews/Stout/Stout_Case_1_files/casestudy.csv')
+```
+
+## R Markdown
+
+```{r cars}
+for (year in c(2015,2016,2017)) {
+  current_year = year
+  #total revenue
+  cat('\n\ntotal revenue for year ')
+  cat(year)
+  cat(': ')
+  cat(sum(df[df$year == current_year,]$net_revenue))
+  #new customer revenue
+  if (year != 2015) {
+    prev_cus = df[df$year == year - 1,]$customer_email
+    temp = df[!(df$customer_email %in% prev_cus),]
+    cat('\nnew cutomer revenue for year ')
+    cat(year)
+    cat(': ')
+    cat(sum(temp[temp$year == current_year,]$net_revenue))
+  }
+  #existing customer growth
+  if (year != 2015) {
+    temp1 = df[(df$customer_email %in% prev_cus),]
+    cat('\nexisting cutomer revenue growth for year ')
+    cat(year)
+    cat(': ')
+    cat(sum(temp1[temp1$year == current_year,]$net_revenue) - sum(temp1[temp1$year == (current_year-1),]$net_revenue))
+  }
+  #attrition loss
+  if (year != 2015) {
+    cat('\nattrition loss for year ')
+    cat(year)
+    cat(': ')
+    cat(sum(df[df$year == current_year,]$net_revenue) - sum(df[df$year == (current_year-1),]$net_revenue))
+  }
+  #existing customer revenue current year
+  if (year != 2015) {
+    cat('\ncurrent existing customer revenue for year ')
+    cat(year)
+    cat(': ')
+    cat(sum(temp1[temp1$year == current_year,]$net_revenue))
+  }
+  #existing customer revenue previous year
+  if (year != 2015) {
+    cat('\nprevious existing customer revenue for year ')
+    cat(year)
+    cat(': ')
+    cat(sum(temp1[temp1$year == (current_year-1),]$net_revenue))
+  }
+  #total customers current year
+  if (year != 2015) {
+    cat('\ncurrent total customer for year ')
+    cat(year)
+    cat(': ')
+    cat(nrow(df[df$year == current_year,]))
+  }
+  #total customers previous year
+  if (year != 2015) {
+    cat('\nprevious total customer for year ')
+    cat(year)
+    cat(': ')
+    cat(nrow(df[df$year == (current_year - 1),]))
+  }
+  #new customer
+  if (year != 2015) {
+    cat('\nnew customer for year ')
+    cat(year)
+    cat(': ')
+    cat(nrow(temp[temp$year == current_year,]))
+  }
+  #lost customer
+  if (year != 2015) {
+    cat('\nlost customer for year ')
+    cat(year)
+    cat(': ')
+    cat(nrow(temp1[temp1$year == (current_year-1),]) - nrow(temp1[temp1$year == current_year,]))
+  }
+}
+```
